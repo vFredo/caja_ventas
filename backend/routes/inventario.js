@@ -10,7 +10,7 @@ router.get("/", async (_, res) => {
     })
     .catch(err => {
       // Send a error message in response
-      res.json({ message: `There was an error retrieving inventario: ${err}` })
+      res.json({ message: `Error retornando inventario: ${err}`, success: false })
     })
 })
 
@@ -24,23 +24,22 @@ router.post("/", async (req, res) => {
     })
     .then(() => {
       // Send a success message in response
-      res.json({ message: `Producto: \'${req.body.nombre}\' agregado.` })
+      res.json({ message: `Producto: \'${req.body.nombre}\' agregado.`, success: true})
     })
     .catch(err => {
       // Send a error message in response
-      res.json({ message: `There was an error creating ${req.body.nombre} inventario: ${err}` })
+      res.json({ message: `Error creando \'${req.body.nombre}\' en inventario: ${err}`, success: false })
     })
 })
 
 router.put("/:id", async (req, res) => {
   const {id} = req.params
   // Find specific book in the database and remove it
-  knex("inventario")
+  knex('inventario')
     .update(req.body)
     .where({id})
     .then(rows => {
-      // the argument here as you stated
-      // describes the number of rows updated
+      // rows describes the number of rows updated
       // therefore if no row found no row will be updated
       if (!rows) {
         return res.json({ success: false })
@@ -58,11 +57,11 @@ router.delete("/:id", async (req, res) => {
     .del() // delete the record
     .then(() => {
       // Send a success message in response
-      res.json({ message: `Producto ${id} deleted.` })
+      res.json({ message: `Producto con id \'${id}\' eliminado.`, success: true })
     })
     .catch(err => {
       // Send a error message in response
-      res.json({ message: `There was an error deleting ${id} Prodcuto: ${err}` })
+      res.json({ message: `Error eliminando producto \'${id}\': ${err}`, success: false })
     })
 })
 
