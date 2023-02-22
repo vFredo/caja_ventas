@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const knex = require('../connection')
+const knex = require('../config/connection')
 
 router.get("/", async (_, res) => {
   knex
