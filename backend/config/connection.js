@@ -2,7 +2,7 @@
 const path = require('path')
 
 // Get the location of database.sqlite file
-const dbPath = path.resolve(__dirname, 'proyecto.db')
+const dbPath = path.resolve(__dirname, 'database.db')
 
 // Create connection to SQLite database
 const knex = require('knex')({

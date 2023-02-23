@@ -1,9 +1,10 @@
 const router = require('express').Router()
-const knex = require('../config/connection')
+const knex = require('../config/connection') // Base de datos
 
+// se retorna todos los productos del inventario
 router.get("/", async (_, res) => {
   knex
-    .select('*') // select all records
+    .select('*')
     .from('inventario')
     .then(datos => {
       return res.json(datos)
@@ -14,27 +15,25 @@ router.get("/", async (_, res) => {
     })
 })
 
+// se agrega un producto al inventario
 router.post("/", async (req, res) => {
-  // Add new book to database
   knex('inventario')
-    .insert({ // insert new record, a book
+    .insert({
       'nombre': req.body.nombre,
       'cantidad': req.body.cantidad,
       'valor': req.body.valor,
     })
     .then(() => {
-      // Send a success message in response
       res.json({ message: `Producto: \'${req.body.nombre}\' agregado.`, success: true})
     })
     .catch(err => {
-      // Send a error message in response
       res.json({ message: `Error creando \'${req.body.nombre}\' en inventario: ${err}`, success: false })
     })
 })
 
+// actualiza un producto del inventario
 router.put("/:id", async (req, res) => {
   const {id} = req.params
-  // Find specific book in the database and remove it
   knex('inventario')
     .update(req.body)
     .where({id})
@@ -49,18 +48,16 @@ router.put("/:id", async (req, res) => {
     .catch(e => res.json(e))
 })
 
+// elimina un producto del inventario
 router.delete("/:id", async (req, res) => {
   const {id} = req.params
-  // Find specific book in the database and remove it
   knex('inventario')
-    .where({id}) // find correct record based on id
-    .del() // delete the record
+    .where({id}) // encontrando el producto por id
+    .del() // eliminando el producto
     .then(() => {
-      // Send a success message in response
       res.json({ message: `Producto con id \'${id}\' eliminado.`, success: true })
     })
     .catch(err => {
-      // Send a error message in response
       res.json({ message: `Error eliminando producto \'${id}\': ${err}`, success: false })
     })
 })
