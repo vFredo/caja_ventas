@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const knex = require('../config/connection') // Base de datos
 
+// mostrar las ventas del dia
 router.get("/", async (_, res) => {
   const curr_time = new Date().toJSON().slice(0, 10);
   knex
@@ -13,6 +14,7 @@ router.get("/", async (_, res) => {
     })
 })
 
+// agregar una venta
 router.post("/", async (req, res) => {
   const curr_time = new Date().toJSON().slice(0, 10);
   const { nit, user_id, productos } = req.body
@@ -41,11 +43,11 @@ router.post("/", async (req, res) => {
         })
       productos[i].push(producto.valor)
     } else {
-      return res.json({ message: `No hay inventario suficiente para el producto \'${curr_id}\'.` })
+      return res.json({ message: `No hay inventario suficiente para el producto \'${producto.nombre}\'.` })
     }
   }
 
-  // Creando venta
+  // creando la venta
   let id_venta = await knex('ventas')
     .insert({
       user_id: user_id,
@@ -57,7 +59,7 @@ router.post("/", async (req, res) => {
       return res.json({ message: `Error insertando venta: ${err}`, success: false })
     })
 
-  // agregando productos a la venta
+  // agregando productos de la venta
   for (let i = 0; i < productos.length; i++) {
     let curr_id = productos[i][0]
     let curr_cant = productos[i][1]
@@ -70,15 +72,13 @@ router.post("/", async (req, res) => {
         cantidad: curr_cant,
         valor: curr_val
       })
-    .catch(err => {
-      return res.json({ message: `Error insertando producto venta: ${err}`, success: false })
-    })
+      .catch(err => {
+        return res.json({ message: `Error insertando producto venta: ${err}`, success: false })
+      })
   }
-
-  return res.json({success: true})
+  return res.json({ message: `Venta No.${id_venta} agregada.`, success: true })
 })
 
 // TODO: admin actualice o elimine las ventas
-
 
 module.exports = router
