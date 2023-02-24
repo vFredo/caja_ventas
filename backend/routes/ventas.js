@@ -1,8 +1,9 @@
 const router = require('express').Router()
 const knex = require('../config/connection') // Base de datos
+const { auth_admin } = require('../middleware/authAdmin')
 
 // mostrar las ventas del dia
-router.get("/", async (_, res) => {
+router.get("/", auth_admin, async (_, res) => {
   const curr_time = new Date().toJSON().slice(0, 10);
   knex
     .select('*')

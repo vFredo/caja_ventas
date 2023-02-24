@@ -1,5 +1,7 @@
 const router = require('express').Router()
 const knex = require('../config/connection') // Base de datos
+const { auth_admin } = require('../middleware/authAdmin')
+
 
 // se retorna todos los productos del inventario
 router.get("/", async (_, res) => {
@@ -16,7 +18,7 @@ router.get("/", async (_, res) => {
 })
 
 // se agrega un producto al inventario
-router.post("/", async (req, res) => {
+router.post("/", auth_admin, async (req, res) => {
   knex('inventario')
     .insert({
       'nombre': req.body.nombre,
@@ -31,7 +33,7 @@ router.post("/", async (req, res) => {
     })
 })
 
-// actualiza un producto del inventario
+// actualizar un producto del inventario
 router.put("/:id", async (req, res) => {
   const {id} = req.params
   knex('inventario')
@@ -49,7 +51,7 @@ router.put("/:id", async (req, res) => {
 })
 
 // elimina un producto del inventario
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth_admin, async (req, res) => {
   const {id} = req.params
   knex('inventario')
     .where({id}) // encontrando el producto por id
