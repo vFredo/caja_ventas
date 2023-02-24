@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const knex = require('../config/connection') // Base de datos
-const { auth_admin } = require('../middleware/authAdmin')
+const { auth_admin, authorize } = require('../middleware/authorization')
 
 // mostrar las ventas del dia
 router.get("/", auth_admin, async (_, res) => {
@@ -16,9 +16,10 @@ router.get("/", auth_admin, async (_, res) => {
 })
 
 // agregar una venta
-router.post("/", async (req, res) => {
+router.post("/", authorize, async (req, res) => {
   const curr_time = new Date().toJSON().slice(0, 10);
-  const { nit, user_id, productos } = req.body
+  const { nit, productos } = req.body
+  const user_id = req.user.decoded.id
   let total = 0
 
   for (let i = 0; i < productos.length; i++) {

@@ -2,9 +2,9 @@ const router = require('express').Router()
 const knex = require('../config/connection') // Base de datos
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt')
+const { auth_admin, authorize } = require('../middleware/authorization')
 
-
-router.get("/", async (_, res) => {
+router.get("/", auth_admin, async (_, res) => {
   knex
     .select('*')
     .from('users')
@@ -44,11 +44,11 @@ router.post("/login", async (req, res) => {
 
   if (user) {
     const match = await bcrypt.compare(password, user.password)
-      .catch((err) => res.json({ success: false, error: err }))
+      .catch((err) => res.json({ success: false, message: err }))
 
     if (!match) return res.json({
       success: false,
-      message: "El usuario y la contraseña son incorrectos."
+      message: "El usuario y/o la contraseña son incorrectos."
     })
 
     const payload = { id: user.id, username: user.username, rol: user.rol }
@@ -61,8 +61,13 @@ router.post("/login", async (req, res) => {
       }).json({ success: true, username: user.username, id: user.id })
     })
   } else {
-    res.json({ success: false, message: "El usuario y la contraseña son incorrectos." })
+    res.json({ success: false, message: "El usuario y/o la contraseña son incorrectos." })
   }
+})
+
+// Cerrar sesion
+router.get("/logout", authorize, async (_, res) => {
+  res.clearCookie("accessToken").json({ success: true, message: "Se ha cerrado sesion." })
 })
 
 module.exports = router
