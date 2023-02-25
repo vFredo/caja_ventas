@@ -8,9 +8,7 @@ router.get("/", authorize, async (_, res) => {
   knex
     .select('*')
     .from('inventario')
-    .then(datos => {
-      return res.json(datos)
-    })
+    .then(datos => { res.json(datos) })
     .catch(err => {
       // Send a error message in response
       res.json({ message: `Error retornando inventario: ${err}`, success: false })
@@ -43,11 +41,11 @@ router.put("/:id", authorize, async (req, res) => {
       // rows describes the number of rows updated
       // therefore if no row found no row will be updated
       if (!rows) {
-        return res.json({ success: false })
+        return res.json({ success: false, message: `No existe producto con id \'${id}\'.` })
       }
-      return res.json({ success: true })
+      res.json({ success: true, message: `Producto \'${id}\' actualizado.` })
     })
-    .catch(e => res.json(e))
+    .catch(err => res.json({ success: false, message: err }))
 })
 
 // elimina un producto del inventario

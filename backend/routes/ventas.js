@@ -4,12 +4,12 @@ const { auth_admin, authorize } = require('../middleware/authorization')
 
 // mostrar las ventas del dia
 router.get("/", auth_admin, async (_, res) => {
-  const curr_time = new Date().toJSON().slice(0, 10);
+  const curr_time = new Date().toJSON().slice(0, 10)
   knex
     .select('*')
     .from('ventas')
     .where({ fecha: curr_time })
-    .then(datos => { return res.json(datos) })
+    .then(datos => { res.json(datos) })
     .catch(err => {
       res.json({ message: `Error retornando inventario: ${err}`, success: false })
     })
@@ -17,7 +17,7 @@ router.get("/", auth_admin, async (_, res) => {
 
 // agregar una venta
 router.post("/", authorize, async (req, res) => {
-  const curr_time = new Date().toJSON().slice(0, 10);
+  const curr_time = new Date().toJSON().slice(0, 10)
   const { nit, productos } = req.body
   const user_id = req.user.decoded.id
   let total = 0
@@ -78,9 +78,9 @@ router.post("/", authorize, async (req, res) => {
         return res.json({ message: `Error insertando producto venta: ${err}`, success: false })
       })
   }
-  return res.json({ message: `Venta No.${id_venta} agregada.`, success: true })
+  res.json({ message: `Venta No.${id_venta} agregada.`, success: true })
 })
 
-// TODO: admin actualice o elimine las ventas
+// TODO: admin actualice o elimine las ventas y  get los items de la venta
 
 module.exports = router

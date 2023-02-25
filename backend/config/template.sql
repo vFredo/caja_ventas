@@ -24,8 +24,6 @@ CREATE TABLE ventas(
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-/* TODO: necesario? sino como vamos a saber los productos
- que se vendieron en cada venta? */
 CREATE TABLE producto_ventas(
   id INTEGER NOT NULL UNIQUE,
   id_venta INTEGER NOT NULL,
@@ -36,4 +34,3 @@ CREATE TABLE producto_ventas(
   FOREIGN KEY (id_venta) REFERENCES ventas(id),
   FOREIGN KEY (id_producto) REFERENCES inventario(id)
 );
-

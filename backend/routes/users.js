@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const knex = require('../config/connection') // Base de datos
-const jwt = require('jsonwebtoken');
+const { sign } = require('jsonwebtoken');
 const bcrypt = require('bcrypt')
 const { auth_admin, authorize } = require('../middleware/authorization')
 
@@ -52,7 +52,7 @@ router.post("/login", async (req, res) => {
     })
 
     const payload = { id: user.id, username: user.username, rol: user.rol }
-    jwt.sign(payload, "secretToChange", (error, token) => {
+    sign(payload, "secretToChange", (error, token) => {
       if (error) return res.json({ success: false, message: error })
       // Pushing token through the cookies calling it accessToken
       res.cookie("accessToken", token, {
