@@ -5,14 +5,10 @@ const { auth_admin, authorize } = require('../middleware/authorization')
 // mostrar las ventas del dia
 router.get("/", auth_admin, async (_, res) => {
   const curr_time = new Date().toJSON().slice(0, 10)
-  knex
-    .select('*')
-    .from('ventas')
+  knex.select('*').from('ventas')
     .where({ fecha: curr_time })
     .then(datos => { res.json(datos) })
-    .catch(err => {
-      res.json({ message: `Error retornando inventario: ${err}`, success: false })
-    })
+    .catch(err => { res.json({ message: `Error retornando inventario: ${err}`, success: false }) })
 })
 
 // agregar una venta
@@ -88,7 +84,7 @@ router.post("/", authorize, async (req, res) => {
   }
 
   // creando la venta
-  let id_venta = await knex('ventas')
+  let venta = await knex('ventas')
     .insert({
       user_id: user_id,
       cliente: nit,
@@ -96,9 +92,7 @@ router.post("/", authorize, async (req, res) => {
       total: total,
       fecha: curr_time
     }, ['id'])
-    .catch(err => {
-      return res.json({ message: `Error insertando venta: ${err}`, success: false })
-    })
+    .catch(err => { return res.json({ message: `Error insertando venta: ${err}`, success: false }) })
 
   // agregando productos de la venta
   for (let i = 0; i < productos.length; i++) {
@@ -108,7 +102,7 @@ router.post("/", authorize, async (req, res) => {
 
     await knex('producto_ventas')
       .insert({
-        id_venta: id_venta[0].id,
+        id_venta: venta[0].id,
         id_producto: curr_id,
         cantidad: curr_cant,
         valor: curr_val
@@ -117,19 +111,17 @@ router.post("/", authorize, async (req, res) => {
         return res.json({ message: `Error insertando producto venta: ${err}`, success: false })
       })
   }
-  return res.json({ message: `Venta No.${id_venta[0].id} agregada.`, success: true })
+  return res.json({ message: `Venta No.${venta[0].id} agregada.`, success: true })
 })
 
 // TODO: admin actualice o elimine las ventas y  get los items de la venta
-router.delete("/:id", auth_admin,async (req, res) => {
+router.delete("/:id", auth_admin, async (req, res) => {
   const { id } = req.params
 
+  // eliminando los productos de la venta
   await knex('producto_ventas')
-    .where({ id_venta: id }) // encontrando el producto por id
-    .del() // eliminando el producto
-    .catch(err => {
-      res.json({ message: `Error eliminando productos de venta \'${id}\': ${err}`, success: false })
-    })
+    .where({ id_venta: id }).del()
+    .catch(err => { res.json({ message: `Error eliminando productos de venta No.${id}: ${err}`, success: false }) })
 
   let venta = await knex.select("*").from("ventas").where({ id })
     .catch(err => { return res.json({ message: `Error encontrando venta No.${id}: ${err}`, success: false }) })
@@ -144,37 +136,30 @@ router.delete("/:id", auth_admin,async (req, res) => {
       await knex('clientes')
         .update({ nit: venta.cliente, puntos: cliente[0].puntos + 100 })
         .where({ nit: venta.cliente })
-        .catch(err => {
-          return res.json({ message: `Error sumando los puntos del cliente: ${err}`, success: false })
-        })
+        .catch(err => { return res.json({ message: `Error sumando los puntos del cliente: ${err}`, success: false }) })
     } else {
       let puntos_quitar = Math.floor(venta.total / 5000)
       await knex('clientes')
         .update({ nit: venta.cliente, puntos: cliente[0].puntos - puntos_quitar })
         .where({ nit: venta.cliente })
-        .catch(err => {
-          return res.json({ message: `Error quitando los puntos al cliente: ${err}`, success: false })
-        })
+        .catch(err => { return res.json({ message: `Error quitando los puntos al cliente: ${err}`, success: false }) })
     }
   }
 
-  await knex('ventas')
-    .where({ id }) // encontrando el producto por id
-    .del() // eliminando el producto
-    .catch(err => {
-      return res.json({ message: `Error eliminando producto \'${id}\': ${err}`, success: false })
-    })
+  // eliminando la venta
+  await knex('ventas').where({ id }).del()
+    .catch(err => { return res.json({ message: `Error eliminando venta No.${id}: ${err}`, success: false }) })
 
   res.json({ message: `Venta con id \'${id}\' eliminada.`, success: true })
-
 })
 
 // Ver puntos de un usuario
-router.get("/puntos/:nit", authorize,async (req, res) => {
+router.get("/puntos/:nit", authorize, async (req, res) => {
   let { nit } = req.params
   let cliente = await knex.select("puntos").from("clientes").where({ nit })
-    .catch(err => { return res.json({ message: `Error eliminando producto \'${id}\': ${err}`, success: false }) })
-  res.json({ success: true, message: `Cliente: ${nit} Puntos: ${cliente[0].puntos}` })
+    .catch(err => { return res.json({ message: `Encontrando al cliente con nit ${nit}: ${err}`, success: false }) })
+
+  res.json({ success: true, message: `NIT: ${nit} - ${cliente[0].puntos}` })
 })
 
 module.exports = router
