@@ -17,11 +17,13 @@ CREATE TABLE inventario(
 CREATE TABLE ventas(
   id INTEGER NOT NULL UNIQUE,
   user_id INTERGER NOT NULL,
-  cliente TEXT NOT NULL,
+  cliente INTEGER NOT NULL,
+  descuento BOOLEAN NOT NULL,
   fecha DATE NOT NULL,
   total INTEGER NOT NULL,
   PRIMARY KEY("id" AUTOINCREMENT),
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (cliente) REFERENCES clientes(nit)
 );
 
 CREATE TABLE producto_ventas(
@@ -33,4 +35,9 @@ CREATE TABLE producto_ventas(
   PRIMARY KEY("id" AUTOINCREMENT),
   FOREIGN KEY (id_venta) REFERENCES ventas(id),
   FOREIGN KEY (id_producto) REFERENCES inventario(id)
+);
+
+CREATE TABLE clientes(
+  nit INTERGER NOT NULL UNIQUE,
+  puntos INTEGER NOT NULL
 );

@@ -14,7 +14,7 @@ router.get("/", auth_admin, async (_, res) => {
     })
 })
 
-router.post("/register", async (req, res) => {
+router.post("/register", auth_admin, async (req, res) => {
   const { username, password, rol } = req.body
   const id = await knex.select("*", ["id"]).from("users").where({ username: username })
 
