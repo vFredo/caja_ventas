@@ -70,4 +70,10 @@ router.get("/logout", authorize, async (_, res) => {
   res.clearCookie("accessToken").json({ success: true, message: "Se ha cerrado sesion." })
 })
 
+// Verified if the user is still log in
+router.get("/connect", authorize, (req, res) => {
+  const { username } = req.user.decoded
+  res.json({ success: true, username: username })
+})
+
 module.exports = router
