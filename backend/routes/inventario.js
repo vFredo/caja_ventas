@@ -23,8 +23,8 @@ router.post("/", auth_admin, async (req, res) => {
       'cantidad': req.body.cantidad,
       'valor': req.body.valor,
     })
-    .then(() => {
-      res.json({ message: `Producto: \'${req.body.nombre}\' agregado.`, success: true })
+    .then((elem) => {
+      res.json({ message: `Producto: \'${req.body.nombre}\' agregado.`, success: true, id: elem[0] })
     })
     .catch(err => {
       res.json({ message: `Error creando \'${req.body.nombre}\' en inventario: ${err}`, success: false })

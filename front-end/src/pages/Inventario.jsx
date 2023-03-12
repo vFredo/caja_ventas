@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
 import axios from "axios"
+import { useEffect, useState } from "react"
 import TablaInventario from "../components/TablaInventario"
 import PopupForm from "../components/PopupForm"
 
@@ -11,13 +11,11 @@ const Inventario = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:8888/api/inventario",
-          { withCredentials: true, })
+        const res = await axios.get("http://localhost:8888/api/inventario", { withCredentials: true })
         setItems(res.data)
       } catch (error) {
-        console.error(error)
+        console.error("FETCH NOOO", error)
       } finally {
-        // Actualiza la variable isLoading una vez que la solicitud HTTP se haya completado, ya sea con éxito o con error.
         setIsLoading(false)
       }
     }
@@ -28,22 +26,22 @@ const Inventario = () => {
     return <p>Loading...</p>
   }
 
-  // TODO: solucionar agregar producto
-  const handleAgregar = async (nombre, cantidad, valor) => {
+  const handleAgregar = async (data) => {
     try {
-      const data = { nombre: nombre, cantidad: cantidad, valor: valor}
+      setIsLoading(true)
       const res = await axios.post("http://localhost:8888/api/inventario", data, { withCredentials: true });
       if (res.data.success){
-        const itemsUpdate = [...items]
-        itemsUpdate.push(data)
-        setItems(itemsUpdate)
+        data = {...data, id: res.data.id}
+        const newItems = [...items, data]
+        setItems(newItems)
       } else {
-        console.log("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+        console.log("No se pudo agregar elemento")
       }
     } catch (error) {
-      console.error(error);
+      console.error("NOO PINCHE AXIOS", error);
     } finally {
-      setIsOpen(false)
+      handleOpen()
+      setIsLoading(false)
     }
   }
 
@@ -53,10 +51,10 @@ const Inventario = () => {
 
   return (
     <div>
-      <TablaInventario items={items}/>
+      <TablaInventario inventario={items} setInventario={setItems}/>
       <br/>
       <button onClick={handleOpen}>Agregar Producto</button>
-      <PopupForm isOpen={isOpen} onRequestClose={handleOpen} handleFunc={handleAgregar}/>
+      <PopupForm isOpen={isOpen} handleOpen={handleOpen} onSubmit={handleAgregar} />
     </div>
   )
 }

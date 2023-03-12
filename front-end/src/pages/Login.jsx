@@ -1,14 +1,10 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-
+import { useState } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
-import useAuth from '../hooks/useAuth';
 
 const Login = () => {
-  const { auth, setAuth } = useAuth();
-
-  const navigate = useNavigate();
-  const location = useLocation();
+  const navigate = useNavigate()
+  const location = useLocation()
   const from = location.state?.from?.pathname || "/";
 
   const [user, setUser] = useState('');

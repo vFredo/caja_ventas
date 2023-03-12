@@ -1,13 +1,16 @@
 import { Route, Routes } from 'react-router-dom'
+import Modal from "react-modal"
 import PrivateRoute from './components/PrivateRoute'
 import PrivateAdmin from './components/PrivateAdmin'
+import Layout from './components/Layout'
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Inventario from "./pages/Inventario"
 import Ventas from "./pages/Ventas"
 import Register from "./pages/Register"
 import Informe from "./pages/Informe"
-import Layout from './components/Layout';
+
+Modal.setAppElement('#root')
 
 function App() {
 

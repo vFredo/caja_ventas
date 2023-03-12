@@ -3,13 +3,12 @@ import axios from "axios"
 
 const Informe = () => {
   const [ventas, setVentas] = useState([])
-  const [isLoading, setIsLoading] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get("http://localhost:8888/api/ventas",
-          { withCredentials: true, })
+        const res = await axios.get("http://localhost:8888/api/ventas", { withCredentials: true, })
         setVentas(res.data)
       } catch (error) {
         console.error(error)

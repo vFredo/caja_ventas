@@ -1,10 +1,7 @@
 import InventarioItem from './InventarioItem'
-import { useState } from "react"
 import axios from "axios"
 
-const TablaInventario = ({ items }) => {
-
-  const [inventario, setInventario] = useState(items)
+const TablaInventario = ({ inventario, setInventario }) => {
 
   const handleActualizar = async (id, nombre, cantidad, precio) => {
     const data = { nombre: nombre, cantidad: cantidad, valor: precio }
@@ -14,12 +11,13 @@ const TablaInventario = ({ items }) => {
 
   const handleEliminar = async (id) => {
     const url = `http://localhost:8888/api/inventario/${id}`
-    await axios.delete(url, { withCredentials: true, }).then((res) => {
-      if (res.data.success) {
-        const newItems = items.filter(item => item.id !== id);
-        setInventario(newItems);
-      }
-    })
+    await axios.delete(url, { withCredentials: true, })
+      .then((res) => {
+        if (res.data.success) {
+          const newItems = inventario.filter(item => item.id !== id);
+          setInventario(newItems)
+        }
+      })
   }
 
   return (
@@ -35,7 +33,7 @@ const TablaInventario = ({ items }) => {
       <tbody>
         {inventario.map(
           (item) => {
-            return <InventarioItem key={item.id} item={item} handleActualizar={handleActualizar} handleEliminar={handleEliminar}/>
+            return <InventarioItem key={item.id} item={item} handleActualizar={handleActualizar} handleEliminar={handleEliminar} />
           })
         }
       </tbody>

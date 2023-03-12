@@ -11,7 +11,6 @@ const InventarioItem = ({ item, handleActualizar, handleEliminar}) => {
       <tr>
         <td>{item.id}</td>
         <td>
-          {/* {item.nombre} */}
           <input
             type="text"
             id={item.id}
@@ -21,7 +20,6 @@ const InventarioItem = ({ item, handleActualizar, handleEliminar}) => {
           />
         </td>
         <td>
-          {/* {item.cantidad} */}
           <input
             type="text"
             id={item.id}
@@ -31,7 +29,6 @@ const InventarioItem = ({ item, handleActualizar, handleEliminar}) => {
           />
         </td>
         <td>
-          {/* {item.precio} */}
           <input
             type="text"
             id={item.id}
