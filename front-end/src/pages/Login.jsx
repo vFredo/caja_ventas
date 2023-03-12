@@ -17,7 +17,7 @@ const Login = () => {
       { withCredentials: true, })
       .then((res) => {
         if (res.data.success) {
-          setAuth({ username: user, rol: res.data.rol, id: res.data.id, isAuth: true });
+          // setAuth({ username: user, rol: res.data.rol, id: res.data.id, isAuth: true });
           setUser('');
           setPwd('');
           navigate(from, { replace: true });
@@ -27,7 +27,6 @@ const Login = () => {
           setPwd('');
         }
       }).catch((err) => {
-        setErrMsg("Error calling API");
         console.error("Axios ERROR ASAP: ", err)
       })
   }
