@@ -22,18 +22,22 @@ const Home = () => {
     <div>
       <h1>Links</h1>
       <br />
+      <button onClick={logout}>Logout</button>
+      <br />
       <h2>Public</h2>
       <Link to="/login">Login</Link>
       <br />
-      <Link to="/register">Register</Link>
       <br />
-      <button onClick={logout}>Logout</button>
       <h2>Private</h2>
       <Link to="/">Home</Link>
       <br />
-      <Link to="/editor">Editors Page</Link>
+      <Link to="/register">Register</Link>
       <br />
-      <Link to="/admin">Admin Page</Link>
+      <Link to="/inventario">Inventario</Link>
+      <br />
+      <Link to="/ventas">Ventas</Link>
+      <br />
+      <Link to="/informe">Informe del dia</Link>
     </div>
   )
 }

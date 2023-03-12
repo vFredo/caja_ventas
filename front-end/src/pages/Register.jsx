@@ -1,35 +1,28 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 
+import { useState } from 'react';
 import axios from 'axios'
-import useAuth from '../hooks/useAuth';
 
-const Login = () => {
-  const { auth, setAuth } = useAuth();
-
-  const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
+const Register = () => {
 
   const [user, setUser] = useState('');
   const [pwd, setPwd] = useState('');
+  const [rol, setRol] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const data = { username: user, password: pwd }
-    await axios.post("http://localhost:8888/api/user/login", data,
+    const data = { username: user, password: pwd, rol: rol }
+    await axios.post("http://localhost:8888/api/user/register", data,
       { withCredentials: true, })
       .then((res) => {
         if (res.data.success) {
-          setAuth({ username: user, rol: res.data.rol, id: res.data.id, isAuth: true });
           setUser('');
           setPwd('');
-          navigate(from, { replace: true });
         } else {
           console.log('Incorrect Username or Password');
           setUser('');
           setPwd('');
         }
+        console.log(res.data)
       }).catch((err) => {
         setErrMsg("Error calling API");
         console.error("Axios ERROR ASAP: ", err)
@@ -38,7 +31,7 @@ const Login = () => {
 
   return (
     <section>
-      <h1>Sign In</h1>
+      <h1>Register</h1>
       <form onSubmit={handleSubmit}>
         <label htmlFor="username">Username:</label>
         <input
@@ -58,10 +51,23 @@ const Login = () => {
           value={pwd}
           required
         />
-        <button>Login</button>
+
+        <label htmlFor="Rol">Rol:</label>
+        <input
+          type="text"
+          id="rol"
+          autoComplete="off"
+          onChange={(e) => setRol(e.target.value)}
+          value={rol}
+          required
+        />
+        <button>Register</button>
       </form>
     </section>
   )
 }
 
-export default Login
+export default Register
+
+
+

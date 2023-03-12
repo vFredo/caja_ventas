@@ -76,4 +76,9 @@ router.get("/connect", authorize, (req, res) => {
   res.json({ success: true, username: username })
 })
 
+// Verified if the user is still log in
+router.get("/connect-admin", auth_admin, (req, res) => {
+  const { username } = req.user.decoded
+  res.json({ success: true, username: username })
+})
 module.exports = router
