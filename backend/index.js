@@ -13,8 +13,8 @@ app.set('port', process.env.PORT || 8888)
 
 // Global middlewares
 app.use(express.json())
-app.use(cors())
 app.use(cookieParser())
+app.use(cors())
 
 // Routes; this takes the index.js that is in the folder './routes'
 app.use("/api", require('./routes'))
