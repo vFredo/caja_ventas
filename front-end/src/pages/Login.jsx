@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import {Box, TextField, Typography} from '@mui/material'
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import axios from 'axios'
 
 const Login = () => {
@@ -32,30 +34,57 @@ const Login = () => {
   }
 
   return (
-    <section>
-      <h1>Sign In</h1>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          id="username"
-          autoComplete="off"
-          onChange={(e) => setUser(e.target.value)}
-          value={user}
-          required
-        />
+    <Box width="100vw" height="100vh" display="flex" justifyContent="center" alignItems="center">
+      <Box width="400px" height="400px" display="flex" flexDirection="column" alignItems="center" sx={{
+        backgroundColor: " #34495e",
+        borderRadius: "15px"
+      }}>
+        <h1>Sign In</h1>
+        <AccountCircleOutlinedIcon style={{
+          fontSize: '80px'
+        }}/>
+        <form onSubmit={handleSubmit}>
+          <Box width="100%" height="300px" display="flex" flexDirection="column">
+          <TextField
+            type="text"
+            id="username"
+            label="Username"
+            autoComplete="off"
+            onChange={(e) => setUser(e.target.value)}
+            value={user}
+            required
+            variant="outlined"
+            sx={{
+              marginBottom: "10px",
+              width: "300px",
+              marginTop: "10px"
+            }}
+          />
 
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          onChange={(e) => setPwd(e.target.value)}
-          value={pwd}
-          required
-        />
-        <button>Login</button>
-      </form>
-    </section>
+          <TextField
+            type="password"
+            id="password"
+            label="Password"
+            onChange={(e) => setPwd(e.target.value)}
+            value={pwd}
+            required
+            variant="outlined"
+            sx={{
+              marginBottom: "10px",
+              width: "300px",
+              marginTop: "10px"
+            }}
+          />
+          <button style={{
+            backgroundColor: '#c0392b',
+            borderRadius: "5px",
+            height: "50px",
+            fontWeight: "bold"
+          }}>Login</button>
+          </Box>
+        </form>
+      </Box>
+    </Box>
   )
 }
 

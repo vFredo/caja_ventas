@@ -1,7 +1,11 @@
 import ReactModal from 'react-modal'
 import { useState } from "react";
+import { tokens } from '../theme'; 
+import { useTheme, TextField} from '@mui/material';
 
 const PopupForm = ({ isOpen, handleOpen, onSubmit }) => {
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
   const [nombre, setNombre] = useState("")
   const [cantidad, setCantidad] = useState("")
   const [precio, setPrecio] = useState("")
@@ -25,20 +29,37 @@ const PopupForm = ({ isOpen, handleOpen, onSubmit }) => {
 
 
   return (
-    <ReactModal isOpen={isOpen}>
-      <h2>Agregar Producto</h2>
+    <ReactModal isOpen={isOpen} style={{
+      overlay: {
+        position: 'fixed',
+        width: '50vw',
+        height: '20vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: colors.primary[200],
+        marginTop: '500px',
+        marginLeft: '500px'
+      },
+      content: {
+        backgroundColor: colors.primary[300]
+      }
+      
+    }}>
+      <h2 color={colors.grey[100]}>Add New Product</h2>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="nombre">Nombre:</label>
-        <input type="text" id="nombre" onChange={(e) => setNombre(e.target.value)} value={nombre} />
+        <TextField type="text" id="nombre" onChange={(e) => setNombre(e.target.value)} value={nombre} label='Product Name'/>
 
-        <label htmlFor="cantidad">Cantidad:</label>
-        <input type="number" id="cantidad" onChange={(e) => setCantidad(e.target.value)} value={cantidad} />
+        <TextField type="number" id="cantidad" onChange={(e) => setCantidad(e.target.value)} value={cantidad} label='Amount'/>
 
-        <label htmlFor="precio">Precio:</label>
-        <input type="number" id="precio" onChange={(e) => setPrecio(e.target.value)} value={precio} />
+        <TextField type="number" id="precio" onChange={(e) => setPrecio(e.target.value)} value={precio} label='Price'/>
 
-        <button type="submit">Agregar</button>
-        <button onClick={handleClose}>Cerrar</button>
+        <button type="submit" 
+        style={{backgroundColor: '#3498db', height: '50px', width: '100px', fontWeight:'bold', borderRadius:'5px'}}>
+        Agregar</button>
+        <button onClick={handleClose} 
+        style={{backgroundColor: '#e74c3c', height: '50px', width: '100px', fontWeight:'bold', borderRadius:'5px'}}>
+        Cerrar</button>
       </form>
     </ReactModal>
   )

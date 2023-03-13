@@ -9,36 +9,48 @@ import Inventario from "./pages/Inventario"
 import Ventas from "./pages/Ventas"
 import Register from "./pages/Register"
 import Informe from "./pages/Informe"
+import TopBar from './pages/TopBar'
+import { ThemeProvider, CssBaseline } from '@mui/material'
+import { ColorModeContext, useMode } from "./theme"
 
 Modal.setAppElement('#root')
 
 function App() {
 
+  const [theme, colorMode] = useMode();
+
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route path="login" element={<Login />} />
-        {/* Solo user */}
-        <Route path="/" element={<PrivateRoute>
-          <Home />
-        </PrivateRoute>} />
-        <Route path="ventas" element={<PrivateRoute>
-          <Ventas />
-        </PrivateRoute>} />
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+      <CssBaseline />
+        <main  className='content'>
+          <TopBar/>
+          <Routes>
+            <Route path="/" element={<Layout />}>
+              <Route path="login" element={<Login />} />
+              {/* Solo user */}
+              <Route path="/" element={<PrivateRoute>
+                <Home />
+              </PrivateRoute>} />
+              <Route path="ventas" element={<PrivateRoute>
+                <Ventas />
+              </PrivateRoute>} />
 
-        {/* Solo admin */}
-        <Route path="register" element={<PrivateAdmin>
-          <Register />
-        </PrivateAdmin>} />
-        <Route path="inventario" element={<PrivateAdmin>
-          <Inventario />
-        </PrivateAdmin>} />
-        <Route path="informe" element={<PrivateAdmin>
-          <Informe />
-        </PrivateAdmin>} />
-
-      </Route>
-    </Routes>
+              {/* Solo admin */}
+              <Route path="register" element={<PrivateAdmin>
+                <Register />
+              </PrivateAdmin>} />
+              <Route path="inventario" element={<PrivateAdmin>
+                <Inventario />
+              </PrivateAdmin>} />
+              <Route path="informe" element={<PrivateAdmin>
+                <Informe />
+              </PrivateAdmin>} />
+            </Route>
+          </Routes> 
+        </main>
+      </ThemeProvider>
+    </ColorModeContext.Provider>
   )
 }
 

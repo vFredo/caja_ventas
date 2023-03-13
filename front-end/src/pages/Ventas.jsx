@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
+import { tokens } from "../theme"
+import { Box, Typography, TextField, colors, useTheme} from "@mui/material"
 
 const Ventas = () => {
   const [inventario, setInventario] = useState([])
@@ -9,6 +11,8 @@ const Ventas = () => {
   const [puntos, setPuntos] = useState(false)
   const [nit, setNit] = useState(0)
   const [agregados, setAgregados] = useState([])
+  const theme = useTheme();
+  const colors = tokens(theme.palette.mode);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,66 +55,68 @@ const Ventas = () => {
   }
 
   return (
-    <div>
-      <h2>Productos disponibles</h2>
-      <table>
+    <Box width="100vw" height="100vh" display="flex" justifyContent="center" >
+    <Box width="1000px" justifyContent="center" alignItems="center">
+      <Box sx={{backgroundColor: colors.primary[400], borderRadius:'5px'}}>
+      <h2>Products available </h2>
+      <table >
         <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Cantidad</th>
-            <th>Precio</th>
+          <tr style={{}}>
+            <th style={{fontSize:'20px'}}>ID</th>
+            <th style={{fontSize:'20px'}}>Product Name</th>
+            <th style={{fontSize:'20px'}}>Amount</th>
+            <th style={{fontSize:'20px'}}>Price</th>
           </tr>
         </thead>
         <tbody>
           {inventario.map((item) => (
             <tr key={item.id}>
-              <td>{item.id}</td>
-              <td>{item.nombre}</td>
-              <td>{item.cantidad}</td>
-              <td>{item.valor}</td>
+              <td style={{fontSize:'20px'}}>{item.id}</td>
+              <td style={{fontSize:'20px'}}>{item.nombre}</td>
+              <td style={{fontSize:'20px'}}>{item.cantidad}</td>
+              <td style={{fontSize:'20px'}}>{item.valor}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      <br />
-      <h2>Agregar producto</h2>
+      </Box>
+      <Box sx={{backgroundColor: colors.primary[400], borderRadius:'5px'}}>
+        <h2>Add Product</h2>
 
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="id">ID Producto: </label>
-        <input type="number" id="id" onChange={(e) => setIdSelect(e.target.value)} value={idSelect}/>
+        <form onSubmit={handleSubmit}>
+          <TextField label="Product Id" type="number" id="id" onChange={(e) => setIdSelect(e.target.value)} value={idSelect}/>
+          <TextField label="Product Quantitys" type="number" id="cantidad" onChange={(e) => setCantidadSelect(e.target.value)} value={cantidadSelect}/>
+          <button type="submit" 
+          style={{backgroundColor: '#3498db', height: '50px', width: '100px', fontWeight:'bold', borderRadius:'5px'}}> Add Product </button>
+        </form>
+        <br />
+        <h2>Selected Products</h2>
+        <ul>
+          {agregados.map((elem) => {
+            const producto = inventario.find((x) => x.id == elem[0])
+            return (
+              <li key={elem[0]}>
+                {producto.nombre}|{elem[1]}|{producto.valor}
+                <button onClick={() => eliminarAgregado(elem[0])} 
+                style={{backgroundColor: '#e74c3c', height: '20px', width: '100px', fontWeight:'bold', borderRadius:'5px'}}>Delete</button>
+              </li>
+            )
+          })}
+        </ul>
 
-        <label htmlFor="cantidad">Cantidad Producto:</label>
-        <input type="number" id="cantidad" onChange={(e) => setCantidadSelect(e.target.value)} value={cantidadSelect}/>
+        <br />
+        <h2> Finish Sale</h2>
+        <form onSubmit={handleAgregarVenta}>
+          <label htmlFor="puntos" style={{fontSize:"20px"}}>Use Points?</label>
+          <input type="checkbox" id="puntos" checked={puntos} onChange={(e) => setPuntos(e.target.checked)} />
 
-        <button type="submit">Agregar producto </button>
-      </form>
-      <br />
-      <h2>Productos seleccionados</h2>
-      <ul>
-        {agregados.map((elem) => {
-          const producto = inventario.find((x) => x.id == elem[0])
-          return (
-            <li key={elem[0]}>
-              {producto.nombre}|{elem[1]}|{producto.valor}
-              <button onClick={() => eliminarAgregado(elem[0])}>Eliminar</button>
-            </li>
-          )
-        })}
-      </ul>
+          <TextField label="Client ID" type="number" id="nit" onChange={(e) => setNit(e.target.value)} value={nit}/>
 
-      <br />
-      <h2>Completar Venta</h2>
-      <form onSubmit={handleAgregarVenta}>
-        <label htmlFor="puntos">Usar puntos?</label>
-        <input type="checkbox" id="puntos" checked={puntos} onChange={(e) => setPuntos(e.target.checked)} />
-
-        <label htmlFor="nit">Cedula del cliente:</label>
-        <input type="number" id="nit" onChange={(e) => setNit(e.target.value)} value={nit}/>
-
-        <button type="submit">Hacer venta</button>
-      </form>
-    </div>
+          <button type="submit" style={{backgroundColor: '#28b463', height: '50px', width: '100px', fontWeight:'bold', borderRadius:'5px'}}>Hacer venta</button>
+        </form>
+      </Box>
+      </Box>
+    </Box>
   )
 }
 
